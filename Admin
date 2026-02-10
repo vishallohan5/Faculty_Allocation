@@ -1,0 +1,12 @@
+const router=require('express').Router();
+const auth=require('../middleware/auth');
+const User=require('../models/User');
+const Faculty=require('../models/Faculty');
+
+router.post('/create-faculty',auth(['admin']),async(req,res)=>{
+  const user=await User.create({...req.body,role:'faculty'});
+  await Faculty.create({userId:user._id});
+  res.json('Faculty created');
+});
+
+module.exports=router;
