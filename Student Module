@@ -1,0 +1,12 @@
+const router=require('express').Router();
+const auth=require('../middleware/auth');
+const Group=require('../models/Group');
+
+router.post('/group/create',auth(['student']),async(req,res)=>{
+  if(req.body.members.length>4)
+    return res.status(400).json('Max 4 students allowed');
+  const group=await Group.create(req.body);
+  res.json(group);
+});
+
+module.exports=router;
