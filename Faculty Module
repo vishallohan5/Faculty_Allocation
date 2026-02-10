@@ -1,0 +1,15 @@
+const router=require('express').Router();
+const auth=require('../middleware/auth');
+const Group=require('../models/Group');
+const Faculty=require('../models/Faculty');
+
+router.post('/accept/:id',auth(['faculty']),async(req,res)=>{
+  const fac=await Faculty.findOne({userId:req.user.id});
+  if(fac.currentGroups>=6) return res.status(400).json('Limit reached');
+  await Group.findByIdAndUpdate(req.params.id,{status:'accepted'});
+  fac.currentGroups++; 
+  await fac.save();
+  res.json('Accepted');
+});
+
+module.exports=router;
